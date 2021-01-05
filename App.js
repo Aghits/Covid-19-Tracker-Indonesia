@@ -21,10 +21,15 @@ export default class App extends React.Component {
     return fetch('https://covid19.mathdro.id/api/countries/IDN/')
     .then( response => response.json() ) 
     .then( data => {
+
+      let date = new Date(data.lastUpdate)
+      date.toUTCString()
+
       this.setState({
         conf: data.confirmed.value,
         reco: data.recovered.value,
-        deaths: data.deaths.value
+        deaths: data.deaths.value,
+        lastUp: date
       })
     }).catch((error) => {
       console.log(error)
@@ -36,8 +41,9 @@ export default class App extends React.Component {
 
     return(
       <View style={styles.container}>
-      <ScrollView>
-      <Header centerComponent={{ text: 'Covid 19 Indonesia', style: { color: '#fff', padding: 10 } }} />
+      <Header centerComponent={{ text: 'Covid 19 Indonesia', style: { color: '#fff', padding: 10 } }}
+      rightComponent={{ text: this.state.lastUp, style: { color: '#fff', padding: 10 } }}  />
+      <ScrollView style={styles.scrollview}>
       <Text style={styles.confirmed} h2>{this.state.conf}{' '}<Icon type="font-awesome" name='plus-square'/><Text>Positif</Text></Text>
       <Text style={styles.recovered} h2>{this.state.reco}{' '}<Icon type="font-awesome" name="check"/><Text>Sembuh</Text></Text>
       <Text style={styles.deaths} h2>{this.state.deaths}{' '}<Icon type="font-awesome" name="heartbeat"/><Text>Meninggal</Text></Text>
